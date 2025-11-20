@@ -18,11 +18,11 @@ from sys import argv
 #%%
 wd = argv[1]
 features_file = argv[2]
-os.chdir(wd)
-out_dir = 'out_learning'
+#os.chdir(wd)
+out_dir = os.path.join(wd,'out_learning')
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
-dataset = pd.read_csv(features_file)
+dataset = pd.read_csv(os.path.join(wd,features_file))
 features_filled_nan = dataset[dataset.columns[1:-1]].fillna(dataset[dataset.columns[1:-1]].median())
 dataset = pd.concat([dataset[dataset.columns[0]], features_filled_nan, dataset[dataset.columns[-1]]], axis=1)
 filled_nan_f = os.path.join(wd, 'features_filled_nan.csv')

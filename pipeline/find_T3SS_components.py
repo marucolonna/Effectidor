@@ -150,8 +150,7 @@ def main():
                         help='Name of T3SS datasets directory')
     args = parser.parse_args()
 
-    bacterial_proteome = os.path.join(
-        args.working_directory, args.bacterial_proteome)
+    bacterial_proteome = args.bacterial_proteome #modified, before: os.path.join(args.working_directory, args.bacterial_proteome)
     T3SS_data = os.path.join(args.working_directory, args.T3SS_data)
     tmp_mmseqs = os.path.join(args.working_directory, "tmp_mmseqs")
     output_mmseqs = os.path.join(args.working_directory, "output_mmseqs")

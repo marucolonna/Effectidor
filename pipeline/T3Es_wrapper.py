@@ -72,10 +72,10 @@ def effectors_learn(error_path, ORFs_file, effectors_file, working_directory, tm
             ['python', f'{scripts_dir}/find_effectors.py', f'{blast_datasets_dir}/T3Es.faa', all_prots,
              effectors_prots, coverage, working_directory])
     elif homology_search:
-        effectors_prots2 = 'homology_found_effectors.faa'
+        effectors_prots2 = os.path.join(working_directory, 'homology_found_effectors.faa')
         subprocess.check_output(
             ['python', f'{scripts_dir}/find_effectors.py', f'{blast_datasets_dir}/T3Es.faa', all_prots,
-             effectors_prots2, coverage])
+             effectors_prots2, coverage, working_directory])
         eff1 = SeqIO.to_dict(SeqIO.parse(effectors_prots, 'fasta'))
         eff2 = SeqIO.to_dict(SeqIO.parse(effectors_prots2, 'fasta'))
         eff1.update(eff2)

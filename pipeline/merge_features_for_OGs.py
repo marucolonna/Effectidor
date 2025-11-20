@@ -60,7 +60,7 @@ def main():
             pseudogenes = pseudo_f.read().split('\n')
         merged_T3SS_df = pd.read_csv('T3SS.csv', index_col='Subsystem_T3SS Protein', dtype={'Bacterial Protein ID': str})
         merged_chaperones_df = pd.read_csv('chaperones.csv', index_col='chaperone', dtype={'bacterial_protein': str})
-    with open(os.path.join(working_directory, 'pseudogenes.txt'), 'w') as pseudo_f:
+    with open('pseudogenes.txt', 'w') as pseudo_f:
         pseudo_f.write('\n'.join(pseudogenes))
 
     T3SS_loci_to_remove = merged_T3SS_df.values
@@ -76,13 +76,13 @@ def main():
     chaperon_OGs_to_remove = set([flatten_ortho_dict[locus] for locus in flattened_chaperon_loci_no_nan])
     OGs_no_chaperon = OGs_no_T3SS.drop(index=list(chaperon_OGs_to_remove))
 
-    OGs_no_chaperon.to_csv(os.path.join(working_directory, 'clean_orthologs_table_noT3SS.csv'))
+    OGs_no_chaperon.to_csv('clean_orthologs_table_noT3SS.csv')
 
-    genomes_orthogroup_dict = get_ortho_dict(os.path.join(working_directory, 'clean_orthologs_table_noT3SS.csv'))
+    genomes_orthogroup_dict = get_ortho_dict('clean_orthologs_table_noT3SS.csv') #removed working directory
 
 
-    with open(os.path.join(working_directory, 'clean_orthologs_table_noT3SS.csv')) as in_f:
-        with open(os.path.join(working_directory, 'clean_orthologs_table_with_pseudo.csv'), 'w') as out_f:
+    with open('clean_orthologs_table_noT3SS.csv') as in_f:
+        with open(os.path.join('clean_orthologs_table_with_pseudo.csv'), 'w') as out_f: #removed working directory
             header = next(in_f)
             header = header.replace(f'{header.split(",")[0]},', 'OG,')
             out_f.write(header)
@@ -133,9 +133,9 @@ def main():
                             writer.writerow(row)
 
 
-    combine_all_genomes_data(os.path.join(working_directory, 'full_data.csv'), 'features')
-    combine_all_genomes_data(os.path.join(working_directory, 'full_OGs_annotations.csv'), 'annotations')
-    combine_all_genomes_data(os.path.join(working_directory, 'full_effector_homologs.csv'), 'closest_effector_homologs')
+    combine_all_genomes_data('full_data.csv', 'features') #rmvd wd
+    combine_all_genomes_data('full_OGs_annotations.csv', 'annotations') #rmvd wd
+    combine_all_genomes_data('full_effector_homologs.csv', 'closest_effector_homologs') #rmvd wd
 
 
     def groupbyMode(in_f, out_f, target, new_col_name):
@@ -149,10 +149,10 @@ def main():
         g_df.to_csv(out_f)
 
 
-    groupbyMode(os.path.join(working_directory, 'full_OGs_annotations.csv'),
-                os.path.join(working_directory, 'OGs_annotations.csv'), 'annotation', 'Annotation(s)')
-    groupbyMode(os.path.join(working_directory, 'full_effector_homologs.csv'),
-                os.path.join(working_directory, 'OG_effector_homologs.csv'), 'Effector_ID', 'Effector_homolog(s)')
+    groupbyMode('full_OGs_annotations.csv',
+                'OGs_annotations.csv', 'annotation', 'Annotation(s)')
+    groupbyMode('full_effector_homologs.csv',
+                'OG_effector_homologs.csv', 'Effector_ID', 'Effector_homolog(s)')
 
 
     def label(iterable_arg):
@@ -165,7 +165,7 @@ def main():
             return '?'
 
 
-    df = pd.read_csv(os.path.join(working_directory, 'full_data.csv'))
+    df = pd.read_csv('full_data.csv') #rmvd wd
     features = list(df.columns[2:-1])
     # defining manipulation per feature in the transformation to OGs
     median = []
@@ -222,7 +222,7 @@ def main():
     updated_features.columns = ['_'.join(col) for col in updated_features.columns.values]
     updated_features.columns = [col.replace('label', '_').strip('_') for col in updated_features.columns]
     updated_features.sort_values(by=list(updated_features.columns[1:]), inplace=True)
-    updated_features.to_csv(os.path.join(working_directory, 'OGs_features.csv'), index=False)
+    updated_features.to_csv('OGs_features.csv', index=False)
 
 
 if __name__ == '__main__':
@@ -242,8 +242,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     working_directory = args.working_directory
-    ortho_f = args.OGs_table_path
+    ortho_f = os.path.basename(args.OGs_table_path)
     os.chdir(working_directory)
-    Effectidor_features_d = os.path.join(working_directory, 'Effectidor_runs')
+    Effectidor_features_d = 'Effectidor_runs'
 
     main()

@@ -242,7 +242,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     working_directory = args.working_directory
-    ortho_f = os.path.basename(args.OGs_table_path)
+    ortho_f = args.OGs_table_path
     os.chdir(working_directory)
     Effectidor_features_d = 'Effectidor_runs'
 
